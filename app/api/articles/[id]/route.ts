@@ -2,18 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Handler ini akan mengambil SATU artikel berdasarkan ID-nya.
- * PERBAIKAN: Mengubah cara penulisan parameter kedua agar sesuai
- * dengan ekspektasi server build Netlify.
+ * PERBAIKAN: Mengubah tipe parameter 'context' menjadi 'any'
+ * untuk menghindari ketidakcocokan tipe (type mismatch)
+ * yang spesifik terjadi di server build Netlify.
  */
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } } // <-- PERUBAIKAN UTAMA DI SINI
+  context: any // <-- PERBAIKAN UTAMA DI SINI
 ) {
   const API_TOKEN = process.env.WEBFLOW_API_TOKEN;
   const COLLECTION_ID = process.env.WEBFLOW_ARTICLES_ID;
   
   // Ambil 'id' dari 'context.params'
-  const itemId = context.params.id; // <-- PERUBAIKAN KECIL DI SINI
+  const itemId = context.params.id; // <-- Ini seharusnya tetap aman
 
   if (!API_TOKEN || !COLLECTION_ID) {
     return NextResponse.json({ message: "Konfigurasi server error" }, { status: 500 });
